@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <title>Material Design for Bootstrap</title>
+  <!-- MDB icon -->
+  <link rel="icon" href="{% static 'chat_room/img/mdb-favicon.ico' %}" type="image/x-icon" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" />
+  <!-- Google Fonts Roboto -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+  <!-- MDB -->
+  <link rel="stylesheet" href="{% static 'chat_room/css/bootstrap-chat.min.css' %}" />
+</head>
+
+<body>
+ <!-- Start your project here-->
+  <section style="background-color: #eee;">
+    <div class="container py-5">
+
+      <div class="row">
+
+        <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
+
+          <h5 class="font-weight-bold mb-3 text-center text-lg-start">اعضا</h5>
+
+          <div class="card">
+            <div class="card-body">
+
+              <ul class="list-unstyled mb-0">
+                  {% for client in clients  %}
+
+                <li class="p-2 border-bottom" style="background-color: #eee;">
+                  <a href="{{ client.get_absolute_url }}" class="d-flex justify-content-between">
+                    <div class="d-flex flex-row">
+                        {% if client.profile_pic %}
+                      <img src="{{ client.profile_pic.url }}" alt="avatar"
+                        class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
+                        {% else  %}
+                            <img src="{% static 'profile/img/unkown.jfif'  %}" alt="avatar"
+                                class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
+                        {% endif  %}
+                      <div class="pt-1">
+                        <p class="fw-bold mb-0">{{ client.user.username }}</p>
+                        <p class="small text-muted">Hello, Are you there?</p>
+                      </div>
+                    </div>
+                    <div class="pt-1">
+                      <p class="small text-muted mb-1">Just now</p>
+                      <span class="badge bg-danger float-end">1</span>
+                    </div>
+                  </a>
+                </li>
+
+                  {% endfor %}
+              </ul>
+
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-md-6 col-lg-7 col-xl-8">
+
+          <ul class="list-unstyled">
+
+
+              {% for chat  in total_chats %}
+                  {% if request.user == chat.sender1 %}
+                    <li  class="d-flex justify-content-between-center mb-4">
+                        {% if sender_profile.profile_pic  %}
+                            <a href="{{ sender_profile.get_absolute_url }}">
+                <img src="{{ sender_profile.profile_pic.url }}" alt="avatar"
+                    class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60"></a>
+                        {% else  %}
+                             <a href="{{ sender_profile.get_absolute_url }}">
+              <img src="{% static 'profile/img/unkown.jfif' %}" alt="avatar"
+                   class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60"></a>
+                                                {% endif %}
+
+              <div class="card">
+                <div class="card-header d-flex justify-content-between p-3">
+                  <p class="fw-bold mb-0">{{ chat.sender1.username }}</p>
+                  <p class="text-muted small mb-0"><i class="far fa-clock"></i>    <br/> ساعت نوشتار {{ chat.time }}</p>
+                </div>
+                <div class="card-body">
+                  <p class="mb-0">
+                    {{ chat.text }}
+                  </p>
+                </div>
+              </div>
+            </li>
+                  {% else %}
+                    <li class="d-flex justify-content-between mb-4">
+              <div class="card w-100">
+                <div class="card-header d-flex justify-content-between p-3">
+                  <p class="fw-bold mb-0">{{ chat.sender1.username }}</p>
+                  <p class="text-muted small mb-0"><i class="far fa-clock"></i> <br/> ساعت نوشتار  {{ chat.time }}</p>
+                </div>
+                <div class="card-body">
+                  <p class="mb-0">
+                    {{ chat.text }}
+                 </p>
+                </div>
+              </div>
+                        {% if reciver_profile.profile_pic %}
+                            <a href="{{ reciver_profile.get_absolute_url }}"> <img src="{{  reciver_profile.profile_pic.url }}" alt="avatar"
+                class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60"></a>
+                            {% else  %}
+                            <a href="{{ reciver_profile.get_absolute_url }}"> <img src="{% static 'profile/img/unkown.jfif' %}" alt="avatar"
+                class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60"></a>
+                            {% endif %}
+
+            </li>
+
+                    {% endif %}
+              {% endfor %}
+            <form method="POST">
+                {% csrf_token %}
+           <li class="bg-white mb-3">
+              <div class="form-outline">
+
+                <textarea name="text" class="form-control" id="textAreaExample2" rows="4"></textarea>
+
+                <label class="form-label" for="textAreaExample2">پیام</label>
+              </div>
+            </li>
+            <button type="submit" class="btn btn-info btn-rounded float-end">ارسال</button>
+          </form>
+          </ul>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+  <!-- End your project here-->
+
+  <!-- MDB -->
+  <script type="text/javascript" src="{% static 'chat_room/js/mdb.min.js' %}"></script>
+  <!-- Custom scripts -->
+  <script type="text/javascript"></script>
+</body>
+
+</html>
